@@ -1,0 +1,104 @@
+{% extends "admin/core/base.html" %}
+
+{% block title %}REPEC{% endblock %}
+{% block title-section %}REPEC{% endblock %}
+{% block title-sub %}{{ request.journal.name }} &mdash; ReDIF metadata configuration{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'repec_admin' %}">REPEC</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="row expanded">
+    <div class="large-8 columns">
+
+        <div class="box">
+            <div class="title-area">
+                <h2>Settings</h2>
+            </div>
+            <div class="content">
+                <p>
+                    Configure this journal's REPEC archive. You will need an archive code and
+                    series code from REPEC before enabling this plugin.
+                    See <a href="https://ideas.repec.org/stepbystep.html" target="_blank" rel="noopener">the REPEC step-by-step guide</a>
+                    for registration instructions.
+                </p>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group{% if field.errors %} has-error{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <p class="alert-text">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="success button">Save</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="large-4 columns">
+
+        {% if instance %}
+        <div class="box">
+            <div class="title-area">
+                <h2>Endpoints</h2>
+            </div>
+            <div class="content">
+                {% if instance.enabled %}
+                <p>
+                    The following URLs are live and can be registered with REPEC.
+                    Register your archive at
+                    <a href="https://ideas.repec.org/archives.html" target="_blank" rel="noopener">ideas.repec.org/archives.html</a>.
+                </p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Archive RDF</th>
+                            <td><a href="{{ archive_url }}" target="_blank">{{ archive_url }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Series RDF</th>
+                            <td><a href="{{ series_url }}" target="_blank">{{ series_url }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Papers index</th>
+                            <td><a href="{{ papers_url }}" target="_blank">{{ papers_url }}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <strong>{{ article_count }}</strong> published article{{ article_count|pluralize }} indexed.
+                </p>
+                {% else %}
+                <p class="alert-text">REPEC is currently <strong>disabled</strong> for this journal. Enable it in the settings form to expose the ReDIF endpoints.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="box">
+            <div class="title-area">
+                <h2>Handle format</h2>
+            </div>
+            <div class="content">
+                <p>Article handles are constructed as:</p>
+                <pre>RePEC:{archive}:{series}:v:{vol}:y:{year}:i:{issue}:p:{start}-{end}</pre>
+                <p>
+                    When volume, issue, or page data are missing, the article's
+                    database ID is used as the item number instead.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
