@@ -7,7 +7,7 @@ DESCRIPTION = (
     "Economics (REPEC) archive network."
 )
 AUTHOR = "Janeway Team"
-VERSION = "1.0"
+VERSION = "1.0.1"
 SHORT_NAME = "repec"
 MANAGER_URL = "repec_admin"
 JANEWAY_VERSION = "1.7"
