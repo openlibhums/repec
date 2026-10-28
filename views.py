@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from security.decorators import editor_user_required
+from security.decorators import editor_user_required, has_journal
 
 from plugins.repec import logic
 from plugins.repec.forms import JournalRepecSettingsForm
@@ -55,6 +55,7 @@ def article_rdf(request, article_id):
     return HttpResponse(content, content_type=_PLAIN_TEXT)
 
 
+@has_journal
 @editor_user_required
 def repec_admin(request):
     """Settings page for configuring REPEC for the current journal."""
